@@ -4,6 +4,7 @@ const WORD_SIZE = 6;
 // Constructor to make trie nodes 
 var trieNode = function() {
     this.children = new Array(ALPHABET_SIZE);
+	this.alreadyGuessed = false;
     this.isEndOfWord = false;
 }
 
@@ -140,11 +141,20 @@ for(let i = 0; i < powerset.length; i++){
 }
 
 var validWords = [];
+var gameWords = new trieNode();
 for(let i = 0; i < permutations.length; i++) {
 	if(search(trie, permutations[i])){
+		addWord(gameWords, permutations[i]);
 		validWords.push(permutations[i]);
 	}
 }
 
-//Currently there can be duplicates: ass and ass are not considered the same. 
-console.log(validWords);
+console.log(frames.length);
+
+
+
+
+
+
+
+function animation
