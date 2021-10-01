@@ -70,6 +70,57 @@ function getRandomWord(rootNode, length) {
     return word;
 }
 
+// This function takes in a string (set of chars) and makes the powerset of the characters.
+// **NOTE** It will return combinations that are not valid words.
+// This slick idea came from https://www.geeksforgeeks.org/power-set/
+function makePowerSet(word){
+	const powerSetSize = Math.pow(2, word.length);
+
+	for (i = 0; i <= powerSetSize; i++) {
+
+	}
+}
+			
+
+// This function uses Heap's algorithm to generate permutations of a set of characters.
+// it pushes each permutation onto the 'output' array.
+// **NOTE** letters must be a list of chars, NOT A STRING
+function generatePermutations(index, letters, output) {
+	if (index == 1) {
+		output.push(letters);
+	} else {
+		generatePermutations(index-1, letters);
+		var i=0;
+		for (i = 0; i < index - 1; i++) {
+			if (index%2==0) {
+				// Swap A[j] and A[index-1]
+				var temp = letters[i];
+				letters[i]=letters[index-1];
+				letters[index-1] = temp;
+			} else {
+				//swap A[0], and A[index-1]
+				var temp = letters[0];
+				letters[0] = letters[index-1]
+				letters[index-1] = temp;
+			}
+			generatePermutations(index-1, letters);
+		}
+	}
+}
+
+function swapChars(string, index1, index2) {
+	char1 = string.charAt(index1);
+	char2 = string.charAt(index2);
+
+	subString1 = string.slice(0, index1),
+	subString2 = string.slice(index1+1, index2);
+	subString3 = string.slice(index2, string.length);
+	if(index2 == string.length-1) {
+		subString3 = "";
+	}
+
+	return "" + subString1 + char2 + subString2 + char1 + subString3;
+}
 
 var trie = new trieNode();
 
