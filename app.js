@@ -84,42 +84,32 @@ function makePowerSet(word){
 
 // This function uses Heap's algorithm to generate permutations of a set of characters.
 // it pushes each permutation onto the 'output' array.
-// **NOTE** letters must be a list of chars, NOT A STRING
+// 
+// **NOTE** 
+// letters must be a list of chars, NOT A STRING because strings are difficult to 
+// work with. :(
 function generatePermutations(index, letters, output) {
 	if (index == 1) {
-		output.push(letters);
+		output.push(letters.join(''));
 	} else {
-		generatePermutations(index-1, letters);
+		generatePermutations(index-1, letters, output);
 		var i=0;
 		for (i = 0; i < index - 1; i++) {
 			if (index%2==0) {
-				// Swap A[j] and A[index-1]
-				var temp = letters[i];
-				letters[i]=letters[index-1];
-				letters[index-1] = temp;
+				swapChars(letters, i, index-1);
 			} else {
-				//swap A[0], and A[index-1]
-				var temp = letters[0];
-				letters[0] = letters[index-1]
-				letters[index-1] = temp;
+				swapChars(letters, 0, index-1);
 			}
-			generatePermutations(index-1, letters);
+			generatePermutations(index-1, letters, output);
 		}
 	}
 }
 
+// This funciton swaps the elements at 'index1' and 'index2' in the given array.
 function swapChars(string, index1, index2) {
-	char1 = string.charAt(index1);
-	char2 = string.charAt(index2);
-
-	subString1 = string.slice(0, index1),
-	subString2 = string.slice(index1+1, index2);
-	subString3 = string.slice(index2, string.length);
-	if(index2 == string.length-1) {
-		subString3 = "";
-	}
-
-	return "" + subString1 + char2 + subString2 + char1 + subString3;
+	var temp = string[index1];
+	string[index1] = string[index2]
+	string[index2] = temp;
 }
 
 var trie = new trieNode();
@@ -127,6 +117,9 @@ var trie = new trieNode();
 for (j = 0; j < dictionary.length; j++) {
     addWord(trie, dictionary[j]);
 }
-   
-console.log("done");
+
+let randomWord = getRandomWord(trie, 6);
+let permutations = [];
+generatePermutations(6, Array.from(randomWord), permutations);
+console.log(permutations);
    
