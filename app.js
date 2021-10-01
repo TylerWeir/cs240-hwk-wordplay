@@ -146,4 +146,5 @@ for(let i = 0; i < permutations.length; i++) {
 	}
 }
 
+//Currently there can be duplicates: ass and ass are not considered the same. 
 console.log(validWords);
