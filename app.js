@@ -1,4 +1,5 @@
 const ALPHABET_SIZE = 26;
+const WORD_SIZE = 6;
 
 // Constructor to make trie nodes 
 var trieNode = function() {
@@ -73,14 +74,21 @@ function getRandomWord(rootNode, length) {
 // This function takes in a string (set of chars) and makes the powerset of the characters.
 // **NOTE** It will return combinations that are not valid words.
 // This slick idea came from https://www.geeksforgeeks.org/power-set/
-function makePowerSet(word){
-	const powerSetSize = Math.pow(2, word.length);
+function makePowerSet(word, output){
+	var powerSetSize = Math.pow(2, word.length);
+	var counter, j;
+	var subset = [];
 
-	for (i = 0; i <= powerSetSize; i++) {
-
+	for (counter = 0; counter <= powerSetSize; counter++) {
+		for (j = 0; j < word.length; j++) {
+			if ((counter & (1 << j)) > 0){
+				subset.push(word[j]);
+			}
+		}
+		output.push(subset);	
+		subset = [];
 	}
 }
-			
 
 // This function uses Heap's algorithm to generate permutations of a set of characters.
 // it pushes each permutation onto the 'output' array.
@@ -89,6 +97,9 @@ function makePowerSet(word){
 // letters must be a list of chars, NOT A STRING because strings are difficult to 
 // work with. :(
 function generatePermutations(index, letters, output) {
+	if(index == 0) {
+		return;
+	}
 	if (index == 1) {
 		output.push(letters.join(''));
 	} else {
@@ -118,8 +129,21 @@ for (j = 0; j < dictionary.length; j++) {
     addWord(trie, dictionary[j]);
 }
 
-let randomWord = getRandomWord(trie, 6);
-let permutations = [];
-generatePermutations(6, Array.from(randomWord), permutations);
-console.log(permutations);
-   
+const randomWord = getRandomWord(trie, WORD_SIZE);
+console.log("The word is " + randomWord);
+var powerset = [];
+makePowerSet(randomWord, powerset);
+var permutations = [];
+
+for(let i = 0; i < powerset.length; i++){
+	generatePermutations(powerset[i].length, powerset[i], permutations);
+}
+
+var validWords = [];
+for(let i = 0; i < permutations.length; i++) {
+	if(search(trie, permutations[i])){
+		validWords.push(permutations[i]);
+	}
+}
+
+console.log(validWords);
