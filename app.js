@@ -157,4 +157,19 @@ console.log(frames.length);
 
 
 
-function animation
+async function animator() {
+	for(let f = 0; f < frames.length; f++) {
+		if(frames[f].charAt(0) != '*'){
+			console.log(frames[f]);
+		}else{
+			await new Promise(r => setTimeout(r, 100));
+			console.clear();
+		}
+	}
+}
+
+
+
+
+
+
