@@ -91,12 +91,14 @@ function makePowerSet(word, output){
 	}
 }
 
-// This function uses Heap's algorithm to generate permutations of a set of characters.
-// it pushes each permutation onto the 'output' array.
-// 
-// **NOTE** 
-// letters must be a list of chars, NOT A STRING because strings are difficult to 
-// work with. :(
+/*
+ * This function uses Heap's algorithm to generate permutations of a set of characters.
+ * It pushes each permutation onto the 'output' array. 
+ *
+ * **NOTE** 
+ * Letters must be a list of chars, NOT A STRING.
+ *
+ */
 function generatePermutations(index, letters, output) {
 	if(index == 0) {
 		return;
@@ -117,59 +119,59 @@ function generatePermutations(index, letters, output) {
 	}
 }
 
-// This funciton swaps the elements at 'index1' and 'index2' in the given array.
-function swapChars(string, index1, index2) {
-	var temp = string[index1];
-	string[index1] = string[index2]
-	string[index2] = temp;
+/*
+ * Swaps the characters at 'index1' and 'index2' of the given word.
+ */
+function swapChars(word, index1, index2) {
+	var temp = word[index1];
+	word[index1] = word[index2]
+	word[index2] = temp;
 }
 
+
+
+
+/*
+ * 
+ * Game setup.
+ *
+ */
+
+// Load the dictionary into a trie
 var trie = new trieNode();
 
 for (j = 0; j < dictionary.length; j++) {
     addWord(trie, dictionary[j]);
 }
 
+// Grab a random word from the trie
 const randomWord = getRandomWord(trie, WORD_SIZE);
 console.log("The word is " + randomWord);
+
+// Make the powerset of the word
 var powerset = [];
 makePowerSet(randomWord, powerset);
-var permutations = [];
+powerset = powerset.filter(element => element.length > 2);
 
+// Make the permutations of the powerset elements
+var permutations = [];
 for(let i = 0; i < powerset.length; i++){
 	generatePermutations(powerset[i].length, powerset[i], permutations);
 }
 
+// Check each permutation against the dictionary trie to see if it is a valid word.
 var validWords = [];
-var gameWords = new trieNode();
 for(let i = 0; i < permutations.length; i++) {
 	if(search(trie, permutations[i])){
-		addWord(gameWords, permutations[i]);
-		validWords.push(permutations[i]);
-	}
-}
-
-console.log(frames.length);
-
-
-
-
-
-
-
-async function animator() {
-	for(let f = 0; f < frames.length; f++) {
-		if(frames[f].charAt(0) != '*'){
-			console.log(frames[f]);
-		}else{
-			await new Promise(r => setTimeout(r, 100));
-			console.clear();
+		if(!validWords.includes(permutations[i])) {
+			validWords.push(permutations[i]);
 		}
 	}
 }
+validWords.sort(function(a, b) {
+	return a.length - b.length;
+})
 
 
 
-
-
-
+console.log(validWords);
