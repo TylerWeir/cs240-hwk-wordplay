@@ -1,5 +1,6 @@
 const ALPHABET_SIZE = 26;
 const WORD_SIZE = 6;
+var timeleft = 0;
 
 // Constructor to make trie nodes 
 var trieNode = function() {
@@ -166,13 +167,25 @@ function processGuess(guess, guesses, validWords) {
 	if (index != -1) {
 		guesses[index] = validWords[index];
 	}
+}
 
 function checkWinCondition(guesses) {
 	return guesses.every(element => !element.includes("-"));
 }
 
-
-
+function printResult(guesses, validWords){
+	console.clear();
+	console.log("Thanks for playing!");
+	var numRight = 0;
+	for(let i = 0; i < guesses.length; i++) {
+		if(!guesses[i].includes("-")) {
+			numRight += 1;
+		}
+	}
+	console.log("You guessed " + numRight + " of the " + validWords.length + " words.");
+	console.log("The words were: ");
+	validWords.map(word => console.log(word));
+}
 
 /*
  * 
@@ -221,6 +234,10 @@ var guesses = validWords.map(word => "-".repeat(word.length));
 var letterset = shuffleWord(gameWord)
 
 
+
+
+
+
 /*
  *
  * Main game loop
@@ -237,6 +254,7 @@ var letterset = shuffleWord(gameWord)
 
 var running = true;
 var shuffled = false;
+
 while (running) {
 	console.clear();
 
@@ -246,6 +264,7 @@ while (running) {
 		console.log("Shuffled the letters.")
 		shuffled = false;
 	}
+
 	console.log("Letters: " + formatLetterSet(letterset));
 	console.log();
 	printGuesses(guesses);
@@ -257,10 +276,9 @@ while (running) {
 		// shuffle the letterset
 		letterset = shuffleWord(gameWord);
 		shuffled = true;
-	} else if (guess == "q" || guess = null) {
+	} else if (guess == "q" || guess == null) {
 		// user wants to quit.
-		console.clear()
-		console.log("Thanks for playing.");	
+		printResult(guesses, validWords);
 		running = false;
 	}
 
@@ -270,8 +288,6 @@ while (running) {
 		console.clear();
 		console.log("You win!!");
 	}
-
-
 }
 
 
