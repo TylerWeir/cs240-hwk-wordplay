@@ -129,6 +129,21 @@ function swapChars(word, index1, index2) {
 }
 
 
+/*
+ * Shuffles the given word and returns the result. 
+ *
+ */
+function shuffleWord(word) {
+	var target;
+	var chars = word.split('');
+	for (let i = 0; i < chars.length; i++) {
+		target = Math.floor(Math.random() * chars.length);
+		swapChars(chars, i, target); 
+	}
+	return chars.join('');
+}
+
+
 
 
 /*
@@ -173,5 +188,55 @@ validWords.sort(function(a, b) {
 })
 
 
+var guesses = validWords.map(word => "-".repeat(word.length));
+var letterset = shuffleWord(randomWord).split('');
 
-console.log(validWords);
+/*
+ *
+ * Main game loop
+ *
+ *
+ *
+ * 
+ *
+ *
+ *
+ *
+ *
+ */
+
+var running = true;
+
+while (running) {
+
+	console.log("Letters: " + letterset.map(word => word + " " ))
+
+	running = false;
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
