@@ -143,6 +143,34 @@ function shuffleWord(word) {
 	return chars.join('');
 }
 
+/*
+ * Formats the letterset to print nicely. 
+ */
+function formatLetterSet(letters) {
+	// turn to 
+	var letterList = letters.split('');
+	return letterList.join(' ');
+}
+
+/*
+ * Prints the guessed words.
+ */
+function printGuesses(guesses) {
+	for (let i = 0; i < guesses.length; i++) {
+		console.log(guesses[i]);
+	}
+}
+
+function processGuess(guess, guesses, validWords) {
+	var index = validWords.indexOf(guess);
+	if (index != -1) {
+		guesses[index] = validWords[index];
+	}
+
+function checkWinCondition(guesses) {
+	return guesses.every(element => !element.includes("-"));
+}
+
 
 
 
@@ -160,12 +188,12 @@ for (j = 0; j < dictionary.length; j++) {
 }
 
 // Grab a random word from the trie
-const randomWord = getRandomWord(trie, WORD_SIZE);
-console.log("The word is " + randomWord);
+const gameWord = getRandomWord(trie, WORD_SIZE);
+console.log("The word is " + gameWord);
 
 // Make the powerset of the word
 var powerset = [];
-makePowerSet(randomWord, powerset);
+makePowerSet(gameWord, powerset);
 powerset = powerset.filter(element => element.length > 2);
 
 // Make the permutations of the powerset elements
@@ -189,7 +217,9 @@ validWords.sort(function(a, b) {
 
 
 var guesses = validWords.map(word => "-".repeat(word.length));
-var letterset = shuffleWord(randomWord).split('');
+
+var letterset = shuffleWord(gameWord)
+
 
 /*
  *
@@ -206,12 +236,40 @@ var letterset = shuffleWord(randomWord).split('');
  */
 
 var running = true;
-
+var shuffled = false;
 while (running) {
+	console.clear();
 
-	console.log("Letters: " + letterset.map(word => word + " " ))
+	// Print the game state
+	
+	if(shuffled) {
+		console.log("Shuffled the letters.")
+		shuffled = false;
+	}
+	console.log("Letters: " + formatLetterSet(letterset));
+	console.log();
+	printGuesses(guesses);
 
-	running = false;
+	// Get and process the guess from the user
+	let guess = prompt("Make a guess! enter '*' to shuffle, 'q' to quit.");
+
+	if (guess == "*") {
+		// shuffle the letterset
+		letterset = shuffleWord(gameWord);
+		shuffled = true;
+	} else if (guess == "q" || guess = null) {
+		// user wants to quit.
+		console.clear()
+		console.log("Thanks for playing.");	
+		running = false;
+	}
+
+	processGuess(guess, guesses, validWords);
+	if(checkWinCondition(guesses)) {
+		running = false;
+		console.clear();
+		console.log("You win!!");
+	}
 
 
 }
