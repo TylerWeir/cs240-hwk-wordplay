@@ -2,14 +2,18 @@ const ALPHABET_SIZE = 26;
 const WORD_SIZE = 6;
 var timeleft = 0;
 
-// Constructor to make trie nodes 
+/*
+ * Returns a node to be used in a trie.
+ */
 var trieNode = function() {
     this.children = new Array(ALPHABET_SIZE);
 	this.alreadyGuessed = false;
     this.isEndOfWord = false;
 }
 
-// Insert a new word into a given trie.
+/*
+ * Adds a node to the trie rooted on rootNode.
+ */
 function addWord(rootNode, word) {
     var currentNode = rootNode;
 
@@ -33,8 +37,10 @@ function addWord(rootNode, word) {
     currentNode.isEndOfWord = true;
 }
 
-// Searches the specified trie for the specified word. Returns true if the word
-// is present, false otherwise. 
+/*
+ * Searches the trie rooted on 'rootNode' for 'word'. Returns true if the word 
+ * is present, false otherwise.
+ */
 function search(rootNode, word) {
     var currentNode = rootNode;
 
@@ -50,12 +56,14 @@ function search(rootNode, word) {
     return currentNode.isEndOfWord;
 }
 
-// Returns a random word of specified length from a specified trie. 
-// 
-// This function is super slow when the word length surpasses 6!
-// This should be optimized. 
-//
-// This may be helpful: https://stackoverflow.com/questions/17152269/how-to-retrieve-a-random-word-of-a-given-length-from-a-trie
+/*
+ * Returns a random word of specified 'length' from the trie rooted on 'rootNode'.
+ *
+ * TODO: This function is in desperate need of optimization! This is a clumbsy 
+ *	     solution to finding a random word. 
+ *
+ * This may be helpful: https://stackoverflow.com/questions/17152269/how-to-retrieve-a-random-word-of-a-given-length-from-a-trie
+ */ 
 function getRandomWord(rootNode, length) {
     var word;
     do {
@@ -73,13 +81,24 @@ function getRandomWord(rootNode, length) {
     return word;
 }
 
-// This function takes in a string (set of chars) and makes the powerset of the characters.
-// **NOTE** It will return combinations that are not valid words.
-// This slick idea came from https://www.geeksforgeeks.org/power-set/
-function makePowerSet(word, output){
+/*
+ * Takes in a string 'word' and makes the powerset of the characters.
+ *
+ *
+ * This concept came from https://www.geeksforgeeks.org/power-set/
+ *
+ * It works by matching each index of the word to a bit.  Then a counter runs 
+ * from the smallest number (000000) to the largest number (111111), each element of 
+ * the subset is made from letters corresponding to bits that are 1 for the number in the
+ * counter. 
+ *
+ * This seems like a very common way to generate powersets. 
+ */
+function makePowerSet(word){
 	var powerSetSize = Math.pow(2, word.length);
 	var counter, j;
 	var subset = [];
+	var powerSet = []
 
 	for (counter = 0; counter <= powerSetSize; counter++) {
 		for (j = 0; j < word.length; j++) {
@@ -87,9 +106,11 @@ function makePowerSet(word, output){
 				subset.push(word[j]);
 			}
 		}
-		output.push(subset);	
+		powerSet.push(subset);	
 		subset = [];
 	}
+
+	return powerSet;
 }
 
 /*
@@ -162,6 +183,10 @@ function printGuesses(guesses) {
 	}
 }
 
+/*
+ * Processes the user's guess by replacing the 'dashes' with the actual word
+ * if it is contianed in valid words.
+ */
 function processGuess(guess, guesses, validWords) {
 	var index = validWords.indexOf(guess);
 	if (index != -1) {
@@ -169,6 +194,11 @@ function processGuess(guess, guesses, validWords) {
 	}
 }
 
+/*
+ * Checks to see if there are any words the player hasn't yet guessed. 
+ * Returns true if the play has won the game (i.e. the player guessed all the words.)
+ *
+ */
 function checkWinCondition(guesses) {
 	return guesses.every(element => !element.includes("-"));
 }
@@ -204,9 +234,8 @@ for (j = 0; j < dictionary.length; j++) {
 const gameWord = getRandomWord(trie, WORD_SIZE);
 console.log("The word is " + gameWord);
 
-// Make the powerset of the word
-var powerset = [];
-makePowerSet(gameWord, powerset);
+// Make the powerset of the word and filter by length
+var powerset = makePowerSet(gameWord);
 powerset = powerset.filter(element => element.length > 2);
 
 // Make the permutations of the powerset elements
@@ -243,13 +272,6 @@ var letterset = shuffleWord(gameWord)
  * Main game loop
  *
  *
- *
- * 
- *
- *
- *
- *
- *
  */
 
 var running = true;
@@ -259,7 +281,6 @@ while (running) {
 	console.clear();
 
 	// Print the game state
-	
 	if(shuffled) {
 		console.log("Shuffled the letters.")
 		shuffled = false;
@@ -289,28 +310,4 @@ while (running) {
 		console.log("You win!!");
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
